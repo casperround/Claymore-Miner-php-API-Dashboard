@@ -13,6 +13,133 @@ body {
   padding:30px;
 }
 
+.box span{
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+  position: absolute;
+}
+
+.box span:nth-child(2){
+  top: 2px;
+  left: 125px;
+}
+
+.box span:nth-child(7){
+  top: 85px;
+  left: 125px;
+}
+
+.box span:nth-child(12){
+  top: 165px;
+  left: 125px;
+}
+
+.server{
+  width: 110px;
+  height: 30px;
+  background: #3a3a3a;
+  border-radius: 1px;
+}
+
+.server ul{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.server:first-child ul li{
+  width: 6px;
+  height: 6px;
+  float: left;
+  margin-left: 10px;
+  margin-top: 12px;
+  background: rgba(149,244,118,0.6);
+}
+
+.server ul li:first-child{
+  -webkit-animation: pattern1 0.14s linear infinite;
+}
+
+.server ul li:nth-child(2){
+  -webkit-animation: pattern1 0.14s 0.02s linear infinite;
+}
+
+.server ul li:last-child{
+  -webkit-animation: pattern1 0.14s 0.05s linear infinite;
+}
+
+@-webkit-keyframes pattern1{
+  0%{
+    background: rgba(149,244,118,0.6);
+  }
+  100%{
+    background: rgba(149,244,118,1);
+  }
+}
+
+.warning ul li{
+  width: 6px;
+  height: 6px;
+  float: left;
+  margin-left: 10px;
+  margin-top: 12px;
+  background: rgba(245,190,0,0.6);
+}
+
+.warning ul li:first-child{
+  -webkit-animation: pattern2 0.14s linear infinite;
+}
+
+.warning ul li:nth-child(2){
+  -webkit-animation: pattern2 0.14s 0.02s linear infinite;
+}
+
+.warning ul li:last-child{
+  -webkit-animation: pattern2 0.14s 0.05s linear infinite;
+}
+
+@-webkit-keyframes pattern2{
+  0%{
+    background: rgba(245,190,0,0.6);
+  }
+  100%{
+    background: rgba(245,190,0,1);
+  }
+}
+
+.error ul li{
+  width: 6px;
+  height: 6px;
+  float: left;
+  margin-left: 10px;
+  margin-top: 12px;
+  background: rgba(236,69,62,0.6);
+}
+
+.error ul li:first-child{
+  -webkit-animation: pattern3 0.9s linear infinite;
+}
+
+.error ul li:nth-child(2){
+  -webkit-animation: pattern3 0.9s linear infinite;
+}
+
+.error ul li:last-child{
+  -webkit-animation: pattern3 0.9s linear infinite;
+}
+
+@-webkit-keyframes pattern3{
+  0%{
+    background: rgba(236,69,62,0.6);
+  }
+  80%{
+    background: rgba(236,69,62,0.6);
+  }
+  100%{
+    background: rgba(236,69,62,1);
+  }
+}
 .box {
   background: linear-gradient(#526494, #604484);
   position:relative;
@@ -88,8 +215,14 @@ body {
 
 
 
-require('conf.php');
-$socket1 = fsockopen($mine1_ip, $port, $errno, $errstr); 
+include('conf.php');
+
+
+
+
+
+if ($fp1 = fsockopen($mine1_ip,$port,$errCode,$errStr,$waitTimeoutInSeconds)) {
+  $socket1 = fsockopen($mine1_ip, $port, $errno, $errstr); 
   fputs($socket1, $data); 
   $buffer1 = ""; 
     while(!feof($socket1)) 
@@ -144,9 +277,10 @@ $socket1 = fsockopen($mine1_ip, $port, $errno, $errstr);
     $mine1_hash6 = round($mine1_hash[5] * (1/1024),2);
 // - Close the socket for the RPC Telnet of miner1
 fclose($socket1); 
+}
 
-//  END OF SOCKET 1
 
+if ($fp1 = fsockopen($mine2_ip,$port,$errCode,$errStr,$waitTimeoutInSeconds)) {
 $socket2 = fsockopen($mine2_ip, $port, $errno, $errstr); 
 fputs($socket2, $data); 
   $buffer2 = ""; 
@@ -202,8 +336,9 @@ fputs($socket2, $data);
     $mine2_hash6 = round($mine2_hash[5] * (1/1024),2);
 // - Close the socket for the RPC Telnet of miner1
 fclose($socket2); 
-
+}
 // END OF SOCKET 2
+if ($fp1 = fsockopen($mine3_ip,$port,$errCode,$errStr,$waitTimeoutInSeconds)) {
 $socket3 = fsockopen($mine3_ip, $port, $errno, $errstr); 
 fputs($socket3, $data); 
 
@@ -260,9 +395,9 @@ fputs($socket3, $data);
     $mine3_hash6 = round($mine3_hash[5] * (1/1024),2);
 // - Close the socket for the RPC Telnet of miner1
 fclose($socket3); 
-
+}
 // END OF SOCKET 3
-
+if ($fp1 = fsockopen($mine4_ip,$port,$errCode,$errStr,$waitTimeoutInSeconds)) {
 $socket4 = fsockopen($mine4_ip, $port, $errno, $errstr); 
 fputs($socket4, $data); 
  $buffer4 = ""; 
@@ -319,7 +454,7 @@ fputs($socket4, $data);
 // - Close the socket for the RPC Telnet of miner1
 fclose($socket4); 
 // END OF SOCKET 4
-
+}
 
 
 
@@ -329,6 +464,33 @@ $global_hash = $mine31_hash1 + $mine1_hash2 + $mine1_hash3 + $mine1_hash4 + $min
   
 <div class="box">
   <div class="box__header">
+
+   <?php if ($fp1 = fsockopen($mine1_ip,$port,$errCode,$errStr,$waitTimeoutInSeconds)) { ?>
+    <div class="server">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+    </div>
+   <?php } elseif ($fp1 = fsockopen($mine1_ip,'80',$errCode,$errStr,$waitTimeoutInSeconds)) { ?>
+<div class="server warning">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+   <?php } else { ?>
+<div class="server error">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+  <?php } ?>
+
   </div>
   <div class="box__body">
     <div class="stats stats--main">
@@ -361,6 +523,33 @@ $minehash1 = $mine1_hash1 + $mine1_hash2 + $mine1_hash3 + $mine1_hash4 + $mine1_
 <!-- STATS 2-->
 <div class="box" style="position: relative;display: inline-block;">
   <div class="box__header">
+   
+  <?php if ($fp1 = fsockopen($mine2_ip,$port,$errCode,$errStr,$waitTimeoutInSeconds)) { ?>
+    <div class="server">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+    </div>
+   <?php } elseif ($fp1 = fsockopen($mine2_ip,'80',$errCode,$errStr,$waitTimeoutInSeconds)) { ?>
+<div class="server warning">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+   <?php } else { ?>
+<div class="server error">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+  <?php } ?>
+
   </div>
   <div class="box__body">
     <div class="stats stats--main">
@@ -393,6 +582,32 @@ $minehash1 = $mine1_hash1 + $mine1_hash2 + $mine1_hash3 + $mine1_hash4 + $mine1_
   
 <div class="box" style="position: relative;display: inline-block;">
   <div class="box__header">
+   
+  <?php if ($fp1 = fsockopen($mine3_ip,$port,$errCode,$errStr,$waitTimeoutInSeconds)) { ?>
+    <div class="server">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+    </div>
+   <?php } elseif ($fp1 = fsockopen($mine3_ip,'80',$errCode,$errStr,$waitTimeoutInSeconds)) { ?>
+<div class="server warning">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+   <?php } else { ?>
+<div class="server error">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+  <?php } ?>
   </div>
   <div class="box__body">
     <div class="stats stats--main">
@@ -424,7 +639,33 @@ $minehash1 = $mine1_hash1 + $mine1_hash2 + $mine1_hash3 + $mine1_hash4 + $mine1_
 
 
 <div class="box" style="position: relative;display: inline-block;">
-  <div class="box__header">
+     <div class="box__header">
+  <?php if ($fp1 = fsockopen($mine4_ip,$port,$errCode,$errStr,$waitTimeoutInSeconds)) { ?>
+    <div class="server">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+    </div>
+   <?php } elseif ($fp1 = fsockopen($mine4_ip,'80',$errCode,$errStr,$waitTimeoutInSeconds)) { ?>
+<div class="server warning">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+   <?php } else { ?>
+<div class="server error">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+  <?php } ?>
+
   </div>
   <div class="box__body">
     <div class="stats stats--main">
